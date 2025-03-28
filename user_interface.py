@@ -202,6 +202,6 @@ if st.button('Predict Loan Default', type="primary"):
         )
         if prediction is not None:
             if prediction == 1:
-                st.error("The loan is likely to **default**.")
+                st.error("The loan is **predicted to default**.")
             else:
-                st.success("The loan is **unlikely to default**.")
+                st.success("The loan is **predicted not to default**.")
