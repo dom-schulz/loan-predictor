@@ -66,7 +66,8 @@ def predict_loan(defaulted, loan_amnt, funded_amnt, funded_amnt_inv, int_rate, i
                     {total_rec_int} AS total_rec_int,
                     {recoveries} AS recoveries,
                     {collection_recovery_fee} AS collection_recovery_fee,
-                    {last_pymnt_amnt} AS last_pymnt_amnt))
+                    {last_pymnt_amnt} AS last_pymnt_amnt,
+                    RAND() AS random_value))
         """
         # Execute the query and get the prediction
         result = client.query(query).result()
