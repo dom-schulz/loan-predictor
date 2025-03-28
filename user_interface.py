@@ -139,7 +139,7 @@ def predict_loan(defaulted, loan_amnt, funded_amnt, funded_amnt_inv, int_rate, i
 def main():
     st.title("Loan Default Prediction")
     
-    # Generate random default values only once at the start
+    # Initialize session state for defaults if not exists
     if 'defaults' not in st.session_state:
         st.session_state.defaults = get_random_defaults()
     
@@ -187,39 +187,10 @@ def main():
     # Button to generate new random values
     if st.button('Generate New Random Values', key='generate_random'):
         st.session_state.defaults = get_random_defaults()
+        st.experimental_rerun()
 
     # Button to trigger prediction
     if st.button('Predict Loan Default', type="primary"):
-        # Update session state with current values before prediction
-        st.session_state.defaults.update({
-            'loan_amnt': loan_amnt,
-            'funded_amnt': funded_amnt,
-            'funded_amnt_inv': funded_amnt_inv,
-            'int_rate': int_rate,
-            'installment': installment,
-            'sub_grade': sub_grade,
-            'home_ownership': home_ownership,
-            'annual_inc': annual_inc,
-            'verification_status': verification_status,
-            'dti': dti,
-            'delinq_2yrs': delinq_2yrs,
-            'fico_range_low': fico_range_low,
-            'fico_range_high': fico_range_high,
-            'inq_last_6mths': inq_last_6mths,
-            'mths_since_last_delinq': mths_since_last_delinq,
-            'open_acc': open_acc,
-            'pub_rec': pub_rec,
-            'revol_bal': revol_bal,
-            'revol_util': revol_util,
-            'total_acc': total_acc,
-            'total_pymnt': total_pymnt,
-            'total_rec_prncp': total_rec_prncp,
-            'total_rec_int': total_rec_int,
-            'recoveries': recoveries,
-            'collection_recovery_fee': collection_recovery_fee,
-            'last_pymnt_amnt': last_pymnt_amnt
-        })
-        
         with st.spinner('Making prediction...'):
             # Get the prediction from BigQuery model
             prediction = predict_loan(
