@@ -3,6 +3,7 @@ from google.cloud import bigquery
 import json
 import os
 from google.oauth2 import service_account
+import random
 
 # Set page config
 st.set_page_config(
@@ -10,6 +11,61 @@ st.set_page_config(
     page_icon="💰",
     layout="wide"
 )
+
+# Function to generate random values
+def get_random_defaults():
+    # Numeric ranges from query results
+    ranges = {
+        'loan_amnt': (800.0, 40000.0),
+        'funded_amnt': (800.0, 40000.0),
+        'funded_amnt_inv': (0.0, 40000.0),
+        'int_rate': (5.31, 30.99),
+        'installment': (24.84, 1618.24),
+        'annual_inc': (0.0, 9225000.0),
+        'dti': (0.0, 999.0),
+        'delinq_2yrs': (0.0, 35.0),
+        'fico_range_low': (625.0, 845.0),
+        'fico_range_high': (629.0, 850.0),
+        'inq_last_6mths': (0.0, 17.0),
+        'mths_since_last_delinq': (0.0, 152.0),
+        'open_acc': (1.0, 66.0),
+        'pub_rec': (0.0, 61.0),
+        'revol_bal': (0.0, 689335.0),
+        'revol_util': (0.0, 137.2),
+        'total_acc': (1.0, 122.0),
+        'total_pymnt': (0.0, 40981.43),
+        'total_rec_prncp': (0.0, 40000.0),  # Using loan amount max as a reasonable limit
+        'total_rec_int': (0.0, 40000.0),    # Using loan amount max as a reasonable limit
+        'recoveries': (0.0, 40000.0),       # Using loan amount max as a reasonable limit
+        'collection_recovery_fee': (0.0, 1000.0),  # Using a reasonable limit
+        'last_pymnt_amnt': (0.0, 40981.43)
+    }
+    
+    # String values from query results
+    string_values = {
+        'sub_grade': ['A1', 'A2', 'A3', 'A4', 'A5', 'B1', 'B2', 'B3', 'B4', 'B5', 
+                     'C1', 'C2', 'C3', 'C4', 'C5', 'D1', 'D2', 'D3', 'D4', 'D5', 
+                     'E1', 'E2', 'E3', 'E4', 'E5', 'F1', 'F2', 'F3', 'F4', 'F5', 
+                     'G1', 'G2', 'G3', 'G4', 'G5'],
+        'home_ownership': ['ANY', 'MORTGAGE', 'OTHER', 'OWN', 'RENT'],
+        'verification_status': ['Not Verified', 'Source Verified', 'Verified']
+    }
+    
+    # Generate random values
+    random_values = {}
+    for field, (min_val, max_val) in ranges.items():
+        if field in ['delinq_2yrs', 'inq_last_6mths', 'open_acc', 'pub_rec', 'total_acc']:
+            # Integer values
+            random_values[field] = random.randint(int(min_val), int(max_val))
+        else:
+            # Float values, rounded to 2 decimal places
+            random_values[field] = round(random.uniform(min_val, max_val), 2)
+    
+    # Generate random string values
+    for field, values in string_values.items():
+        random_values[field] = random.choice(values)
+    
+    return random_values
 
 try:
     # Retrieve the service account JSON from Streamlit's secrets manager
@@ -84,36 +140,45 @@ def main():
     st.title("Loan Default Prediction")
     st.write("Enter the details below to predict loan default probability.")
 
-    # Input fields for the user to fill out with default values
-    loan_amnt = st.number_input("Loan Amount", min_value=0.0, value=1000.0)
-    funded_amnt = st.number_input("Funded Amount", min_value=0.0, value=1000.0)
-    funded_amnt_inv = st.number_input("Funded Amount Investment", min_value=0.0, value=1000.0)
-    int_rate = st.number_input("Interest Rate (%)", min_value=0.0, value=15.49)
-    installment = st.number_input("Installment Amount", min_value=0.0, value=34.91)
+    # Get random default values
+    defaults = get_random_defaults()
+
+    # Input fields for the user to fill out with random default values
+    loan_amnt = st.number_input("Loan Amount", min_value=800.0, max_value=40000.0, value=defaults['loan_amnt'])
+    funded_amnt = st.number_input("Funded Amount", min_value=800.0, max_value=40000.0, value=defaults['funded_amnt'])
+    funded_amnt_inv = st.number_input("Funded Amount Investment", min_value=0.0, max_value=40000.0, value=defaults['funded_amnt_inv'])
+    int_rate = st.number_input("Interest Rate (%)", min_value=5.31, max_value=30.99, value=defaults['int_rate'])
+    installment = st.number_input("Installment Amount", min_value=24.84, max_value=1618.24, value=defaults['installment'])
     sub_grade = st.selectbox("Sub Grade", ['A1', 'A2', 'A3', 'A4', 'A5', 'B1', 'B2', 'B3', 'B4', 'B5', 
                                           'C1', 'C2', 'C3', 'C4', 'C5', 'D1', 'D2', 'D3', 'D4', 'D5', 
                                           'E1', 'E2', 'E3', 'E4', 'E5', 'F1', 'F2', 'F3', 'F4', 'F5', 
-                                          'G1', 'G2', 'G3', 'G4', 'G5'], index=12)  # C4 is at index 12
-    home_ownership = st.selectbox("Home Ownership", ['OWN', 'MORTGAGE', 'RENT'], index=2)  # RENT is at index 2
-    annual_inc = st.number_input("Annual Income", min_value=0.0, value=30000.0)
-    verification_status = st.selectbox("Verification Status", ['Verified', 'Not Verified'], index=1)  # Not Verified is at index 1
-    dti = st.number_input("Debt-to-Income Ratio", min_value=0.0, value=6.9)
-    delinq_2yrs = st.number_input("Delinquencies in the last 2 years", min_value=0, value=0)
-    fico_range_low = st.number_input("FICO Range Low", min_value=0, value=675)
-    fico_range_high = st.number_input("FICO Range High", min_value=0, value=679)
-    inq_last_6mths = st.number_input("Inquiries in the last 6 months", min_value=0, value=1)
-    mths_since_last_delinq = st.number_input("Months since last delinquency", min_value=0, value=5)
-    open_acc = st.number_input("Open Accounts", min_value=0, value=5)
-    pub_rec = st.number_input("Public Records", min_value=0, value=0)
-    revol_bal = st.number_input("Revolving Balance", min_value=0.0, value=2082.0)
-    revol_util = st.number_input("Revolving Utilization Rate (%)", min_value=0.0, value=77.1)
-    total_acc = st.number_input("Total Accounts", min_value=0, value=8)
-    total_pymnt = st.number_input("Total Payment", min_value=0.0, value=348.24)
-    total_rec_prncp = st.number_input("Total Principal Repaid", min_value=0.0, value=233.25)
-    total_rec_int = st.number_input("Total Interest Repaid", min_value=0.0, value=114.99)
-    recoveries = st.number_input("Recoveries", min_value=0.0, value=0.0)
-    collection_recovery_fee = st.number_input("Collection Recovery Fee", min_value=0.0, value=0.0)
-    last_pymnt_amnt = st.number_input("Last Payment Amount", min_value=0.0, value=34.91)
+                                          'G1', 'G2', 'G3', 'G4', 'G5'], 
+                             index=[s for s in ['A1', 'A2', 'A3', 'A4', 'A5', 'B1', 'B2', 'B3', 'B4', 'B5', 
+                                              'C1', 'C2', 'C3', 'C4', 'C5', 'D1', 'D2', 'D3', 'D4', 'D5', 
+                                              'E1', 'E2', 'E3', 'E4', 'E5', 'F1', 'F2', 'F3', 'F4', 'F5', 
+                                              'G1', 'G2', 'G3', 'G4', 'G5'].index(defaults['sub_grade'])])
+    home_ownership = st.selectbox("Home Ownership", ['ANY', 'MORTGAGE', 'OTHER', 'OWN', 'RENT'],
+                                index=['ANY', 'MORTGAGE', 'OTHER', 'OWN', 'RENT'].index(defaults['home_ownership']))
+    annual_inc = st.number_input("Annual Income", min_value=0.0, max_value=9225000.0, value=defaults['annual_inc'])
+    verification_status = st.selectbox("Verification Status", ['Not Verified', 'Source Verified', 'Verified'],
+                                     index=['Not Verified', 'Source Verified', 'Verified'].index(defaults['verification_status']))
+    dti = st.number_input("Debt-to-Income Ratio", min_value=0.0, max_value=999.0, value=defaults['dti'])
+    delinq_2yrs = st.number_input("Delinquencies in the last 2 years", min_value=0, max_value=35, value=defaults['delinq_2yrs'])
+    fico_range_low = st.number_input("FICO Range Low", min_value=625.0, max_value=845.0, value=defaults['fico_range_low'])
+    fico_range_high = st.number_input("FICO Range High", min_value=629.0, max_value=850.0, value=defaults['fico_range_high'])
+    inq_last_6mths = st.number_input("Inquiries in the last 6 months", min_value=0, max_value=17, value=defaults['inq_last_6mths'])
+    mths_since_last_delinq = st.number_input("Months since last delinquency", min_value=0, max_value=152, value=defaults['mths_since_last_delinq'])
+    open_acc = st.number_input("Open Accounts", min_value=1, max_value=66, value=defaults['open_acc'])
+    pub_rec = st.number_input("Public Records", min_value=0, max_value=61, value=defaults['pub_rec'])
+    revol_bal = st.number_input("Revolving Balance", min_value=0.0, max_value=689335.0, value=defaults['revol_bal'])
+    revol_util = st.number_input("Revolving Utilization Rate (%)", min_value=0.0, max_value=137.2, value=defaults['revol_util'])
+    total_acc = st.number_input("Total Accounts", min_value=1, max_value=122, value=defaults['total_acc'])
+    total_pymnt = st.number_input("Total Payment", min_value=0.0, max_value=40981.43, value=defaults['total_pymnt'])
+    total_rec_prncp = st.number_input("Total Principal Repaid", min_value=0.0, max_value=40000.0, value=defaults['total_rec_prncp'])
+    total_rec_int = st.number_input("Total Interest Repaid", min_value=0.0, max_value=40000.0, value=defaults['total_rec_int'])
+    recoveries = st.number_input("Recoveries", min_value=0.0, max_value=40000.0, value=defaults['recoveries'])
+    collection_recovery_fee = st.number_input("Collection Recovery Fee", min_value=0.0, max_value=1000.0, value=defaults['collection_recovery_fee'])
+    last_pymnt_amnt = st.number_input("Last Payment Amount", min_value=0.0, max_value=40981.43, value=defaults['last_pymnt_amnt'])
 
     # Button to trigger prediction
     if st.button('Predict Loan Default'):
