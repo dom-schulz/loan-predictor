@@ -2,3 +2,5 @@ streamlit
 google-cloud-bigquery
 pandas
 numpy
+st-files-connection
+gcsfs
