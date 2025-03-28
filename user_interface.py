@@ -149,14 +149,16 @@ def main():
     funded_amnt_inv = st.number_input("Funded Amount Investment", min_value=0.0, max_value=40000.0, value=defaults['funded_amnt_inv'])
     int_rate = st.number_input("Interest Rate (%)", min_value=5.31, max_value=30.99, value=defaults['int_rate'])
     installment = st.number_input("Installment Amount", min_value=24.84, max_value=1618.24, value=defaults['installment'])
-    sub_grade = st.selectbox("Sub Grade", ['A1', 'A2', 'A3', 'A4', 'A5', 'B1', 'B2', 'B3', 'B4', 'B5', 
-                                          'C1', 'C2', 'C3', 'C4', 'C5', 'D1', 'D2', 'D3', 'D4', 'D5', 
-                                          'E1', 'E2', 'E3', 'E4', 'E5', 'F1', 'F2', 'F3', 'F4', 'F5', 
-                                          'G1', 'G2', 'G3', 'G4', 'G5'], 
-                             index=[s for s in ['A1', 'A2', 'A3', 'A4', 'A5', 'B1', 'B2', 'B3', 'B4', 'B5', 
-                                              'C1', 'C2', 'C3', 'C4', 'C5', 'D1', 'D2', 'D3', 'D4', 'D5', 
-                                              'E1', 'E2', 'E3', 'E4', 'E5', 'F1', 'F2', 'F3', 'F4', 'F5', 
-                                              'G1', 'G2', 'G3', 'G4', 'G5'].index(defaults['sub_grade'])])
+    
+    # Define sub_grade options
+    sub_grade_options = ['A1', 'A2', 'A3', 'A4', 'A5', 'B1', 'B2', 'B3', 'B4', 'B5', 
+                        'C1', 'C2', 'C3', 'C4', 'C5', 'D1', 'D2', 'D3', 'D4', 'D5', 
+                        'E1', 'E2', 'E3', 'E4', 'E5', 'F1', 'F2', 'F3', 'F4', 'F5', 
+                        'G1', 'G2', 'G3', 'G4', 'G5']
+    
+    sub_grade = st.selectbox("Sub Grade", sub_grade_options, 
+                            index=sub_grade_options.index(defaults['sub_grade']))
+    
     home_ownership = st.selectbox("Home Ownership", ['ANY', 'MORTGAGE', 'OTHER', 'OWN', 'RENT'],
                                 index=['ANY', 'MORTGAGE', 'OTHER', 'OWN', 'RENT'].index(defaults['home_ownership']))
     annual_inc = st.number_input("Annual Income", min_value=0.0, max_value=9225000.0, value=defaults['annual_inc'])
