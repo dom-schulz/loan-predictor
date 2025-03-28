@@ -187,7 +187,7 @@ def main():
     # Button to generate new random values
     if st.button('Generate New Random Values', key='generate_random'):
         st.session_state.defaults = get_random_defaults()
-        st.experimental_rerun()
+        st.rerun()
 
     # Button to trigger prediction
     if st.button('Predict Loan Default', type="primary"):
