@@ -3,22 +3,29 @@ from google.cloud import bigquery
 import json
 import os
 from google.oauth2 import service_account
-from google.cloud import bigquery
 
-# Retrieve the service account JSON from Streamlit's secrets manager
-service_account_json = st.secrets["google"]["service_account_json"]
+# Set page config
+st.set_page_config(
+    page_title="Loan Default Prediction",
+    page_icon="💰",
+    layout="wide"
+)
 
-# Parse the JSON string
-credentials_info = json.loads(service_account_json)
+try:
+    # Retrieve the service account JSON from Streamlit's secrets manager
+    service_account_json = st.secrets["google"]["service_account_json"]
 
-# Use the credentials to authenticate the BigQuery client
-credentials = service_account.Credentials.from_service_account_info(credentials_info)
-client = bigquery.Client(credentials=credentials, project=credentials.project_id)
+    # Parse the JSON string
+    credentials_info = json.loads(service_account_json)
+
+    # Use the credentials to authenticate the BigQuery client
+    credentials = service_account.Credentials.from_service_account_info(credentials_info)
+    client = bigquery.Client(credentials=credentials, project=credentials.project_id)
+except Exception as e:
+    st.error(f"Error initializing BigQuery client: {str(e)}")
+    st.stop()
 
 # Now you can use the BigQuery client to run queries
-
-# Initialize BigQuery client
-client = bigquery.Client()
 
 # Now you can make BigQuery queries using this client
 
@@ -27,45 +34,49 @@ def predict_loan(defaulted, loan_amnt, funded_amnt, funded_amnt_inv, int_rate, i
                  home_ownership, annual_inc, verification_status, dti, delinq_2yrs, fico_range_low, fico_range_high,
                  inq_last_6mths, mths_since_last_delinq, open_acc, pub_rec, revol_bal, revol_util, total_acc,
                  total_pymnt, total_rec_prncp, total_rec_int, recoveries, collection_recovery_fee, last_pymnt_amnt):
-    query = f"""
-    SELECT
-        predicted_defaulted
-    FROM
-        ML.PREDICT(MODEL `loan_club_dataset.boosted_tree_model`,
-            (SELECT
-                {loan_amnt} AS loan_amnt,
-                {funded_amnt} AS funded_amnt,
-                {funded_amnt_inv} AS funded_amnt_inv,
-                {int_rate} AS int_rate,
-                {installment} AS installment,
-                '{sub_grade}' AS sub_grade,
-                '{home_ownership}' AS home_ownership,
-                {annual_inc} AS annual_inc,
-                '{verification_status}' AS verification_status,
-                {dti} AS dti,
-                {delinq_2yrs} AS delinq_2yrs,
-                {fico_range_low} AS fico_range_low,
-                {fico_range_high} AS fico_range_high,
-                {inq_last_6mths} AS inq_last_6mths,
-                {mths_since_last_delinq} AS mths_since_last_delinq,
-                {open_acc} AS open_acc,
-                {pub_rec} AS pub_rec,
-                {revol_bal} AS revol_bal,
-                {revol_util} AS revol_util,
-                {total_acc} AS total_acc,
-                {total_pymnt} AS total_pymnt,
-                {total_rec_prncp} AS total_rec_prncp,
-                {total_rec_int} AS total_rec_int,
-                {recoveries} AS recoveries,
-                {collection_recovery_fee} AS collection_recovery_fee,
-                {last_pymnt_amnt} AS last_pymnt_amnt))
-    """
-    # Execute the query and get the prediction
-    result = client.query(query).result()
-    
-    # Extract prediction from result
-    for row in result:
-        return row.predicted_defaulted
+    try:
+        query = f"""
+        SELECT
+            predicted_defaulted
+        FROM
+            ML.PREDICT(MODEL `loan_club_dataset.boosted_tree_model`,
+                (SELECT
+                    {loan_amnt} AS loan_amnt,
+                    {funded_amnt} AS funded_amnt,
+                    {funded_amnt_inv} AS funded_amnt_inv,
+                    {int_rate} AS int_rate,
+                    {installment} AS installment,
+                    '{sub_grade}' AS sub_grade,
+                    '{home_ownership}' AS home_ownership,
+                    {annual_inc} AS annual_inc,
+                    '{verification_status}' AS verification_status,
+                    {dti} AS dti,
+                    {delinq_2yrs} AS delinq_2yrs,
+                    {fico_range_low} AS fico_range_low,
+                    {fico_range_high} AS fico_range_high,
+                    {inq_last_6mths} AS inq_last_6mths,
+                    {mths_since_last_delinq} AS mths_since_last_delinq,
+                    {open_acc} AS open_acc,
+                    {pub_rec} AS pub_rec,
+                    {revol_bal} AS revol_bal,
+                    {revol_util} AS revol_util,
+                    {total_acc} AS total_acc,
+                    {total_pymnt} AS total_pymnt,
+                    {total_rec_prncp} AS total_rec_prncp,
+                    {total_rec_int} AS total_rec_int,
+                    {recoveries} AS recoveries,
+                    {collection_recovery_fee} AS collection_recovery_fee,
+                    {last_pymnt_amnt} AS last_pymnt_amnt))
+        """
+        # Execute the query and get the prediction
+        result = client.query(query).result()
+        
+        # Extract prediction from result
+        for row in result:
+            return row.predicted_defaulted
+    except Exception as e:
+        st.error(f"Error making prediction: {str(e)}")
+        return None
 
 # Define the Streamlit UI for user input
 def main():
@@ -102,18 +113,20 @@ def main():
 
     # Button to trigger prediction
     if st.button('Predict Loan Default'):
-        # Get the prediction from BigQuery model
-        prediction = predict_loan(
-            loan_amnt, funded_amnt, funded_amnt_inv, int_rate, installment, sub_grade,
-            home_ownership, annual_inc, verification_status, dti, delinq_2yrs, fico_range_low,
-            fico_range_high, inq_last_6mths, mths_since_last_delinq, open_acc, pub_rec, revol_bal,
-            revol_util, total_acc, total_pymnt, total_rec_prncp, total_rec_int, recoveries,
-            collection_recovery_fee, last_pymnt_amnt
-        )
-        if prediction == 1:
-            st.write("The loan is likely to **default**.")
-        else:
-            st.write("The loan is **unlikely to default**.")
+        with st.spinner('Making prediction...'):
+            # Get the prediction from BigQuery model
+            prediction = predict_loan(
+                loan_amnt, funded_amnt, funded_amnt_inv, int_rate, installment, sub_grade,
+                home_ownership, annual_inc, verification_status, dti, delinq_2yrs, fico_range_low,
+                fico_range_high, inq_last_6mths, mths_since_last_delinq, open_acc, pub_rec, revol_bal,
+                revol_util, total_acc, total_pymnt, total_rec_prncp, total_rec_int, recoveries,
+                collection_recovery_fee, last_pymnt_amnt
+            )
+            if prediction is not None:
+                if prediction == 1:
+                    st.error("The loan is likely to **default**.")
+                else:
+                    st.success("The loan is **unlikely to default**.")
 
 if __name__ == '__main__':
     main()
