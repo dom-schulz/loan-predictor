@@ -119,6 +119,7 @@ def main():
         with st.spinner('Making prediction...'):
             # Get the prediction from BigQuery model
             prediction = predict_loan(
+                0,  # defaulted parameter (not used in prediction but required by function)
                 loan_amnt, funded_amnt, funded_amnt_inv, int_rate, installment, sub_grade,
                 home_ownership, annual_inc, verification_status, dti, delinq_2yrs, fico_range_low,
                 fico_range_high, inq_last_6mths, mths_since_last_delinq, open_acc, pub_rec, revol_bal,
