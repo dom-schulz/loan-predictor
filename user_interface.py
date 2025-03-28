@@ -2,15 +2,20 @@ import streamlit as st
 from google.cloud import bigquery
 import json
 import os
+from google.oauth2 import service_account
+from google.cloud import bigquery
 
-# Access service account JSON from Streamlit Secrets
+# Retrieve the service account JSON from Streamlit's secrets manager
 service_account_json = st.secrets["google"]["service_account_json"]
 
-# Load the service account JSON as a dictionary
+# Parse the JSON string
 credentials_info = json.loads(service_account_json)
 
-# Set the environment variable for Google Cloud authentication
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = credentials_info
+# Use the credentials to authenticate the BigQuery client
+credentials = service_account.Credentials.from_service_account_info(credentials_info)
+client = bigquery.Client(credentials=credentials, project=credentials.project_id)
+
+# Now you can use the BigQuery client to run queries
 
 # Initialize BigQuery client
 client = bigquery.Client()
