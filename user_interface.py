@@ -1,8 +1,21 @@
 import streamlit as st
 from google.cloud import bigquery
+import json
+import os
 
-# Set up BigQuery client
+# Access service account JSON from Streamlit Secrets
+service_account_json = st.secrets["google"]["service_account_json"]
+
+# Load the service account JSON as a dictionary
+credentials_info = json.loads(service_account_json)
+
+# Set the environment variable for Google Cloud authentication
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = credentials_info
+
+# Initialize BigQuery client
 client = bigquery.Client()
+
+# Now you can make BigQuery queries using this client
 
 # Define the BigQuery SQL query for making predictions
 def predict_loan(defaulted, loan_amnt, funded_amnt, funded_amnt_inv, int_rate, installment, sub_grade,
