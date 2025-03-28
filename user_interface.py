@@ -144,11 +144,11 @@ def main():
     defaults = get_random_defaults()
 
     # Input fields for the user to fill out with random default values
-    loan_amnt = st.number_input("Loan Amount", min_value=800.0, max_value=40000.0, value=defaults['loan_amnt'])
-    funded_amnt = st.number_input("Funded Amount", min_value=800.0, max_value=40000.0, value=defaults['funded_amnt'])
-    funded_amnt_inv = st.number_input("Funded Amount Investment", min_value=0.0, max_value=40000.0, value=defaults['funded_amnt_inv'])
-    int_rate = st.number_input("Interest Rate (%)", min_value=5.31, max_value=30.99, value=defaults['int_rate'])
-    installment = st.number_input("Installment Amount", min_value=24.84, max_value=1618.24, value=defaults['installment'])
+    loan_amnt = st.number_input("Loan Amount", min_value=800.0, max_value=40000.0, value=float(defaults['loan_amnt']))
+    funded_amnt = st.number_input("Funded Amount", min_value=800.0, max_value=40000.0, value=float(defaults['funded_amnt']))
+    funded_amnt_inv = st.number_input("Funded Amount Investment", min_value=0.0, max_value=40000.0, value=float(defaults['funded_amnt_inv']))
+    int_rate = st.number_input("Interest Rate (%)", min_value=5.31, max_value=30.99, value=float(defaults['int_rate']))
+    installment = st.number_input("Installment Amount", min_value=24.84, max_value=1618.24, value=float(defaults['installment']))
     
     # Define sub_grade options
     sub_grade_options = ['A1', 'A2', 'A3', 'A4', 'A5', 'B1', 'B2', 'B3', 'B4', 'B5', 
@@ -161,26 +161,26 @@ def main():
     
     home_ownership = st.selectbox("Home Ownership", ['ANY', 'MORTGAGE', 'OTHER', 'OWN', 'RENT'],
                                 index=['ANY', 'MORTGAGE', 'OTHER', 'OWN', 'RENT'].index(defaults['home_ownership']))
-    annual_inc = st.number_input("Annual Income", min_value=0.0, max_value=9225000.0, value=defaults['annual_inc'])
+    annual_inc = st.number_input("Annual Income", min_value=0.0, max_value=9225000.0, value=float(defaults['annual_inc']))
     verification_status = st.selectbox("Verification Status", ['Not Verified', 'Source Verified', 'Verified'],
                                      index=['Not Verified', 'Source Verified', 'Verified'].index(defaults['verification_status']))
-    dti = st.number_input("Debt-to-Income Ratio", min_value=0.0, max_value=999.0, value=defaults['dti'])
-    delinq_2yrs = st.number_input("Delinquencies in the last 2 years", min_value=0, max_value=35, value=defaults['delinq_2yrs'])
-    fico_range_low = st.number_input("FICO Range Low", min_value=625.0, max_value=845.0, value=defaults['fico_range_low'])
-    fico_range_high = st.number_input("FICO Range High", min_value=629.0, max_value=850.0, value=defaults['fico_range_high'])
-    inq_last_6mths = st.number_input("Inquiries in the last 6 months", min_value=0, max_value=17, value=defaults['inq_last_6mths'])
-    mths_since_last_delinq = st.number_input("Months since last delinquency", min_value=0, max_value=152, value=defaults['mths_since_last_delinq'])
-    open_acc = st.number_input("Open Accounts", min_value=1, max_value=66, value=defaults['open_acc'])
-    pub_rec = st.number_input("Public Records", min_value=0, max_value=61, value=defaults['pub_rec'])
-    revol_bal = st.number_input("Revolving Balance", min_value=0.0, max_value=689335.0, value=defaults['revol_bal'])
-    revol_util = st.number_input("Revolving Utilization Rate (%)", min_value=0.0, max_value=137.2, value=defaults['revol_util'])
-    total_acc = st.number_input("Total Accounts", min_value=1, max_value=122, value=defaults['total_acc'])
-    total_pymnt = st.number_input("Total Payment", min_value=0.0, max_value=40981.43, value=defaults['total_pymnt'])
-    total_rec_prncp = st.number_input("Total Principal Repaid", min_value=0.0, max_value=40000.0, value=defaults['total_rec_prncp'])
-    total_rec_int = st.number_input("Total Interest Repaid", min_value=0.0, max_value=40000.0, value=defaults['total_rec_int'])
-    recoveries = st.number_input("Recoveries", min_value=0.0, max_value=40000.0, value=defaults['recoveries'])
-    collection_recovery_fee = st.number_input("Collection Recovery Fee", min_value=0.0, max_value=1000.0, value=defaults['collection_recovery_fee'])
-    last_pymnt_amnt = st.number_input("Last Payment Amount", min_value=0.0, max_value=40981.43, value=defaults['last_pymnt_amnt'])
+    dti = st.number_input("Debt-to-Income Ratio", min_value=0.0, max_value=999.0, value=float(defaults['dti']))
+    delinq_2yrs = st.number_input("Delinquencies in the last 2 years", min_value=0.0, max_value=35.0, value=float(defaults['delinq_2yrs']))
+    fico_range_low = st.number_input("FICO Range Low", min_value=625.0, max_value=845.0, value=float(defaults['fico_range_low']))
+    fico_range_high = st.number_input("FICO Range High", min_value=629.0, max_value=850.0, value=float(defaults['fico_range_high']))
+    inq_last_6mths = st.number_input("Inquiries in the last 6 months", min_value=0.0, max_value=17.0, value=float(defaults['inq_last_6mths']))
+    mths_since_last_delinq = st.number_input("Months since last delinquency", min_value=0.0, max_value=152.0, value=float(defaults['mths_since_last_delinq']))
+    open_acc = st.number_input("Open Accounts", min_value=1.0, max_value=66.0, value=float(defaults['open_acc']))
+    pub_rec = st.number_input("Public Records", min_value=0.0, max_value=61.0, value=float(defaults['pub_rec']))
+    revol_bal = st.number_input("Revolving Balance", min_value=0.0, max_value=689335.0, value=float(defaults['revol_bal']))
+    revol_util = st.number_input("Revolving Utilization Rate (%)", min_value=0.0, max_value=137.2, value=float(defaults['revol_util']))
+    total_acc = st.number_input("Total Accounts", min_value=1.0, max_value=122.0, value=float(defaults['total_acc']))
+    total_pymnt = st.number_input("Total Payment", min_value=0.0, max_value=40981.43, value=float(defaults['total_pymnt']))
+    total_rec_prncp = st.number_input("Total Principal Repaid", min_value=0.0, max_value=40000.0, value=float(defaults['total_rec_prncp']))
+    total_rec_int = st.number_input("Total Interest Repaid", min_value=0.0, max_value=40000.0, value=float(defaults['total_rec_int']))
+    recoveries = st.number_input("Recoveries", min_value=0.0, max_value=40000.0, value=float(defaults['recoveries']))
+    collection_recovery_fee = st.number_input("Collection Recovery Fee", min_value=0.0, max_value=1000.0, value=float(defaults['collection_recovery_fee']))
+    last_pymnt_amnt = st.number_input("Last Payment Amount", min_value=0.0, max_value=40981.43, value=float(defaults['last_pymnt_amnt']))
 
     # Button to trigger prediction
     if st.button('Predict Loan Default'):
