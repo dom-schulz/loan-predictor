@@ -83,33 +83,36 @@ def main():
     st.title("Loan Default Prediction")
     st.write("Enter the details below to predict loan default probability.")
 
-    # Input fields for the user to fill out
-    loan_amnt = st.number_input("Loan Amount", min_value=0.0)
-    funded_amnt = st.number_input("Funded Amount", min_value=0.0)
-    funded_amnt_inv = st.number_input("Funded Amount Investment", min_value=0.0)
-    int_rate = st.number_input("Interest Rate (%)", min_value=0.0)
-    installment = st.number_input("Installment Amount", min_value=0.0)
-    sub_grade = st.selectbox("Sub Grade", ['A', 'B', 'C', 'D', 'E', 'F', 'G'])
-    home_ownership = st.selectbox("Home Ownership", ['OWN', 'MORTGAGE', 'RENT'])
-    annual_inc = st.number_input("Annual Income", min_value=0.0)
-    verification_status = st.selectbox("Verification Status", ['Verified', 'Not Verified'])
-    dti = st.number_input("Debt-to-Income Ratio", min_value=0.0)
-    delinq_2yrs = st.number_input("Delinquencies in the last 2 years", min_value=0)
-    fico_range_low = st.number_input("FICO Range Low", min_value=0)
-    fico_range_high = st.number_input("FICO Range High", min_value=0)
-    inq_last_6mths = st.number_input("Inquiries in the last 6 months", min_value=0)
-    mths_since_last_delinq = st.number_input("Months since last delinquency", min_value=0)
-    open_acc = st.number_input("Open Accounts", min_value=0)
-    pub_rec = st.number_input("Public Records", min_value=0)
-    revol_bal = st.number_input("Revolving Balance", min_value=0.0)
-    revol_util = st.number_input("Revolving Utilization Rate (%)", min_value=0.0)
-    total_acc = st.number_input("Total Accounts", min_value=0)
-    total_pymnt = st.number_input("Total Payment", min_value=0.0)
-    total_rec_prncp = st.number_input("Total Principal Repaid", min_value=0.0)
-    total_rec_int = st.number_input("Total Interest Repaid", min_value=0.0)
-    recoveries = st.number_input("Recoveries", min_value=0.0)
-    collection_recovery_fee = st.number_input("Collection Recovery Fee", min_value=0.0)
-    last_pymnt_amnt = st.number_input("Last Payment Amount", min_value=0.0)
+    # Input fields for the user to fill out with default values
+    loan_amnt = st.number_input("Loan Amount", min_value=0.0, value=1000.0)
+    funded_amnt = st.number_input("Funded Amount", min_value=0.0, value=1000.0)
+    funded_amnt_inv = st.number_input("Funded Amount Investment", min_value=0.0, value=1000.0)
+    int_rate = st.number_input("Interest Rate (%)", min_value=0.0, value=15.49)
+    installment = st.number_input("Installment Amount", min_value=0.0, value=34.91)
+    sub_grade = st.selectbox("Sub Grade", ['A1', 'A2', 'A3', 'A4', 'A5', 'B1', 'B2', 'B3', 'B4', 'B5', 
+                                          'C1', 'C2', 'C3', 'C4', 'C5', 'D1', 'D2', 'D3', 'D4', 'D5', 
+                                          'E1', 'E2', 'E3', 'E4', 'E5', 'F1', 'F2', 'F3', 'F4', 'F5', 
+                                          'G1', 'G2', 'G3', 'G4', 'G5'], index=12)  # C4 is at index 12
+    home_ownership = st.selectbox("Home Ownership", ['OWN', 'MORTGAGE', 'RENT'], index=2)  # RENT is at index 2
+    annual_inc = st.number_input("Annual Income", min_value=0.0, value=30000.0)
+    verification_status = st.selectbox("Verification Status", ['Verified', 'Not Verified'], index=1)  # Not Verified is at index 1
+    dti = st.number_input("Debt-to-Income Ratio", min_value=0.0, value=6.9)
+    delinq_2yrs = st.number_input("Delinquencies in the last 2 years", min_value=0, value=0)
+    fico_range_low = st.number_input("FICO Range Low", min_value=0, value=675)
+    fico_range_high = st.number_input("FICO Range High", min_value=0, value=679)
+    inq_last_6mths = st.number_input("Inquiries in the last 6 months", min_value=0, value=1)
+    mths_since_last_delinq = st.number_input("Months since last delinquency", min_value=0, value=5)
+    open_acc = st.number_input("Open Accounts", min_value=0, value=5)
+    pub_rec = st.number_input("Public Records", min_value=0, value=0)
+    revol_bal = st.number_input("Revolving Balance", min_value=0.0, value=2082.0)
+    revol_util = st.number_input("Revolving Utilization Rate (%)", min_value=0.0, value=77.1)
+    total_acc = st.number_input("Total Accounts", min_value=0, value=8)
+    total_pymnt = st.number_input("Total Payment", min_value=0.0, value=348.24)
+    total_rec_prncp = st.number_input("Total Principal Repaid", min_value=0.0, value=233.25)
+    total_rec_int = st.number_input("Total Interest Repaid", min_value=0.0, value=114.99)
+    recoveries = st.number_input("Recoveries", min_value=0.0, value=0.0)
+    collection_recovery_fee = st.number_input("Collection Recovery Fee", min_value=0.0, value=0.0)
+    last_pymnt_amnt = st.number_input("Last Payment Amount", min_value=0.0, value=34.91)
 
     # Button to trigger prediction
     if st.button('Predict Loan Default'):
