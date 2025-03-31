@@ -148,7 +148,7 @@ st.title("Loan Default Prediction")
 if 'defaults' not in st.session_state:
     st.session_state.defaults = get_random_defaults()
 
-st.write("Enter the details below to predict loan default probability.")
+st.write("Enter the details below to predict whether the loan will default.")
 
 # Input fields for the user to fill out with random default values
 loan_amnt = st.number_input("Loan Amount", min_value=800.0, max_value=40000.0, value=float(st.session_state.defaults['loan_amnt']))
