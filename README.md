@@ -1,6 +1,6 @@
 # Lending Club Loan Default Prediction Model
 
-This project implements a machine learning model to predict loan defaults using the Lending Club dataset. The model helps lenders assess the risk of potential loan defaults by analyzing various loan and borrower characteristics.
+This project implements a machine learning model to predict loan defaults using the Lending Club dataset. The goal of this project and model is to help lenders assess the risk of potential loan defaults by analyzing various loan and borrower characteristics. 
 
 ## Project Overview
 
@@ -102,7 +102,7 @@ The project includes a Streamlit-based user interface that allows users to:
 
 1. Add visualizations of model performance and metrics 
 2. Look into more specific feature importance analysis
-3. Include model retraining capabilities
+3. Include more analysis regarding the dataset and features that impact defaults. I believe my overall explanation of predictions could be much more in depth. 
 
 
 # Challenges
