@@ -29,7 +29,7 @@ The data was uploaded to Google Cloud Storage and is accessed via BigQuery. The 
 - Prepared the target variable (defaulted)
 
 ### Feature Engineering
-Key features used in the model include:
+Key features used in the model include items like:
 - Loan amount and funding details
 - Interest rates
 - Borrower's annual income
