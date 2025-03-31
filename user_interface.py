@@ -7,7 +7,7 @@ import random
 
 # Set page config
 st.set_page_config(
-    page_title="Loan Default Prediction",
+    page_title="Loan Default Prediction 💰",
     page_icon="💰",
     layout="wide"
 )
