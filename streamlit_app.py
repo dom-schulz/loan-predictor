@@ -12,9 +12,8 @@ st.set_page_config(
     layout="wide"
 )
 
-# Function to generate random values
+# Function to generate random values within pre-defined ranges in the "find_ranges_for_rand.py" file
 def get_random_defaults():
-    # Numeric ranges from query results
     ranges = {
         'loan_amnt': (800.0, 40000.0),
         'funded_amnt': (800.0, 40000.0),
@@ -81,9 +80,6 @@ except Exception as e:
     st.error(f"Error initializing BigQuery client: {str(e)}")
     st.stop()
 
-# Now you can use the BigQuery client to run queries
-
-# Now you can make BigQuery queries using this client
 
 # Define the BigQuery SQL query for making predictions
 def predict_loan(defaulted, loan_amnt, funded_amnt, funded_amnt_inv, int_rate, installment, sub_grade,
@@ -157,9 +153,9 @@ sub_grade_options = ['A1', 'A2', 'A3', 'A4', 'A5', 'B1', 'B2', 'B3', 'B4', 'B5',
                     'E1', 'E2', 'E3', 'E4', 'E5', 'F1', 'F2', 'F3', 'F4', 'F5', 
                     'G1', 'G2', 'G3', 'G4', 'G5']
 
+# Create boxes and dropdowns for the user to fill out or generate random values
 sub_grade = st.selectbox("Sub Grade", sub_grade_options, 
                         index=sub_grade_options.index(st.session_state.defaults['sub_grade']))
-
 home_ownership = st.selectbox("Home Ownership", ['ANY', 'MORTGAGE', 'OTHER', 'OWN', 'RENT'],
                             index=['ANY', 'MORTGAGE', 'OTHER', 'OWN', 'RENT'].index(st.session_state.defaults['home_ownership']))
 annual_inc = st.number_input("Annual Income", min_value=0.0, max_value=9225000.0, value=float(st.session_state.defaults['annual_inc']))
