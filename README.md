@@ -91,10 +91,10 @@ The project includes a Streamlit-based user interface that allows users to:
 
 ## Project Structure
 
-- `bigquery_queries.sql`: Contains SQL queries for data preprocessing and the model training, testing, and evaluating. 
-- `find_ranges_for_rand.py`: Generated realistic ranges for random value generation. These random values have no real substance and do not generate based on the distribution of the original dataset. 
-- `streamlit_app.py`: Streamlit interface implementation. Sensitive information is handled by streamlit's built in "Secrets" handling. 
+- `bigquery_queries.sql`: Contains SQL queries for data preprocessing and the model training, testing, and evaluating.
 - `requirements.txt`: Project dependencies
+- `streamlit_app.py`: Streamlit interface implementation. Sensitive information is handled by streamlit's built in "Secrets" handling. 
+- `find_ranges_for_rand.py`: Generated realistic ranges for random value generation. These random values have no real substance and do not generate based on the distribution of the original dataset. 
 
 
 
