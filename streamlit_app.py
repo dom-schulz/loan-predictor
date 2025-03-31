@@ -67,15 +67,25 @@ def get_random_defaults():
     return random_values
 
 try:
-    # Retrieve the service account JSON from Streamlit's secrets manager
-    service_account_json = st.secrets["google"]["service_account_json"]
-
-    # Parse the JSON string
-    credentials_info = json.loads(service_account_json)
+    # Retrieve service account credentials from Streamlit secrets
+    credentials_info = {
+        "type": st.secrets["google"]["type"],
+        "project_id": st.secrets["google"]["project_id"],
+        "private_key_id": st.secrets["google"]["private_key_id"],
+        "private_key": st.secrets["google"]["private_key"].replace("\\n", "\n"),
+        "client_email": st.secrets["google"]["client_email"],
+        "client_id": st.secrets["google"]["client_id"],
+        "auth_uri": st.secrets["google"]["auth_uri"],
+        "token_uri": st.secrets["google"]["token_uri"],
+        "auth_provider_x509_cert_url": st.secrets["google"]["auth_provider_x509_cert_url"],
+        "client_x509_cert_url": st.secrets["google"]["client_x509_cert_url"],
+        "universe_domain": st.secrets["google"]["universe_domain"]
+    }
 
     # Use the credentials to authenticate the BigQuery client
     credentials = service_account.Credentials.from_service_account_info(credentials_info)
-    client = bigquery.Client(credentials=credentials, project=credentials.project_id)
+    client = bigquery.Client(credentials=credentials, project=credentials_info["project_id"])
+
 except Exception as e:
     st.error(f"Error initializing BigQuery client: {str(e)}")
     st.stop()
