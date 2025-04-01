@@ -115,4 +115,4 @@ The project includes a Streamlit-based user interface that allows users to:
 3. Random number generation for the streamlit app
     - Truly random number/value generation for the predictor interface naturally caused many issues with generating reasonable values. So this resulted in more time spent creating `find_ranges_for_rand.py` to get hard coded ranges and values to generate within. 
 4. Technicality of Model Execution
-    - Just like in my "Future Improvements" section, I believe that I skimmed over some items involving my training and testing, and could improve my model and understanding of the dataset. I believe I somewhat got lucky with this classifier working so well with having to do little testing with parameters and types of models. 
+    - Just like in my "Future Improvements" section, I believe that I skimmed over some items involving my training and testing. I could improve improve my model and understanding of the dataset if I had more time. I believe I somewhat got lucky with this classifier working so well with having to do little testing with parameters and types of models. 
