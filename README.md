@@ -43,6 +43,7 @@ Key features used in the model include items like:
 
 ### Model Selection
 - Algorithm: Gradient Boosted Decision Tree
+    - This algorithm worked well as the classifier needed to be very complex, as there were MANY intricacies within an effective tree for this purpose. 
 - Type: Binary Classification (Default vs. Non-default)
 
 ### Training Process
@@ -85,7 +86,7 @@ The project includes a Streamlit-based user interface that allows users to:
 1. Run the Streamlit interface:  
    - [Click here to launch the app](https://loan-predictor-dom-schulz.streamlit.app/)
 2. Input loan information through the interface or hit "Generate New Random Values" at the bottom.  
-   - Note: the fields are randomly generated when the app is loaded.
+   - Note: the fields are randomly generated when the app is loaded.  
 3. View the prediction results
 
 
@@ -113,3 +114,5 @@ The project includes a Streamlit-based user interface that allows users to:
     - There were many different permissions need for BigQuery and model access for service accounts in Google Cloud. This caused many errors for me to work through during this project. 
 3. Random number generation for the streamlit app
     - Truly random number/value generation for the predictor interface naturally caused many issues with generating reasonable values. So this resulted in more time spent creating `find_ranges_for_rand.py` to get hard coded ranges and values to generate within. 
+4. Technicality of Model Execution
+    - Just like in my "Future Improvements" section, I believe that I skimmed over some items involving my training and testing, and could improve my model and understanding of the dataset. I believe I somewhat got lucky with this classifier working so well with having to do little testing with parameters and types of models. 
