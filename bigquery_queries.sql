@@ -17,7 +17,7 @@ WITH accepted AS (
         home_ownership, 
         annual_inc, 
         verification_status,
-        loan_status,  -- Ensure loan_status is included
+        loan_status,  
         dti, 
         delinq_2yrs, 
         fico_range_low, 
@@ -48,12 +48,12 @@ SELECT
     funded_amnt_inv, 
     int_rate, 
     installment, 
-    sub_grade,  -- grade will be dropped
+    sub_grade,
     emp_length, 
     home_ownership, 
     annual_inc, 
     verification_status,
-    loan_status,  -- Ensure loan_status is included in the final output
+    loan_status, 
     dti, 
     delinq_2yrs, 
     fico_range_low, 
@@ -107,7 +107,7 @@ SELECT
     last_pymnt_amnt,
     defaulted
 FROM loan_club_dataset.accepted_loans_cleaned
-WHERE revol_util IS NOT NULL AND pub_rec IS NOT NULL;  -- Adjusted column name here
+WHERE revol_util IS NOT NULL AND pub_rec IS NOT NULL; 
 
 
 -- Step 3: Convert categorical variables such as sub_grade, home_ownership, verification_status, and zip_code into dummy variables.
@@ -180,7 +180,7 @@ FROM loan_club_dataset.accepted_loans_final;
 
 
 
--- Confirm distribution of defaulted loans (ie. make sure the classifier isn't just outputting 0 or 1)
+-- Confirm distribution of defaulted loans (ie. make sure the classifier accuracy is higher than highest distribution. IE. ensure it isn't just outputting 0 or 1)
 SELECT 
   defaulted, 
   COUNT(*) AS count,
@@ -189,6 +189,9 @@ FROM `loan_club_dataset.accepted_loans_final_cleaned`
 GROUP BY defaulted
 ORDER BY defaulted;
 
+
+
+--------------------------------- Model Training ---------------------------------
 
 -- Split the data into training and test sets
 CREATE OR REPLACE TABLE `loan_club_dataset.train_data` AS
@@ -214,8 +217,6 @@ WHERE random_value > 0.8;  -- 20% for testing
 
 
 
-
-
 -- Train the model, tweaked with parameters and this was the best I got
 CREATE OR REPLACE MODEL `loan_club_dataset.boosted_tree_model`
 OPTIONS(
@@ -229,6 +230,9 @@ OPTIONS(
 ) AS
 SELECT * FROM `loan_club_dataset.train_data`;
 
+
+
+-------------------------- Model Testing and Evaluation ------------------------------
 
 -- Test the model on the test set
 SELECT
