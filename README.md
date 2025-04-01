@@ -85,7 +85,7 @@ The project includes a Streamlit-based user interface that allows users to:
 1. Run the Streamlit interface:  
    - [Click here to launch the app](https://loan-predictor-dom-schulz.streamlit.app/)
 2. Input loan information through the interface or hit "Generate New Random Values" at the bottom.  
-   - Note: the fields are automatically randomly generated.  
+   - Note: the fields are randomly generated when the app is loaded.
 3. View the prediction results
 
 
