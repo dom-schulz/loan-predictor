@@ -138,7 +138,7 @@ The project includes a Streamlit-based user interface that allows users to:
 - Test the model with random values within realistic ranges
 
 
-## Usage/Proof of Concept
+## Usage
 
 1. Run the Streamlit interface to generate default predictions:  
    - [Click here to launch the app](https://loan-predictor-dom-schulz.streamlit.app/)
@@ -149,8 +149,9 @@ The project includes a Streamlit-based user interface that allows users to:
 
 # Future Improvements
 
-1. Look into more specific feature importance and better select features for training. It is lucky how well this model is performing given the quick, simple cleaning process.
-2. Look into performance of other models and weighting them in an ensemble.
+1. Connect to Lending Club API to allow users to plan and see which loans lent are likely to default.
+2. Look into more specific feature importance and better select features for training. It is lucky how well this model is performing given the quick, simple cleaning process.
+3. Look into performance of other models and weighting them in an ensemble.
 
 
 # Challenges
@@ -162,4 +163,4 @@ The project includes a Streamlit-based user interface that allows users to:
 3. Random number generation for the streamlit app
     - Truly random number/value generation for the predictor interface naturally caused many issues with generating reasonable values. So this resulted in more time spent creating `find_ranges_for_rand.py` to get hard coded ranges and values to generate within. 
 4. Technicality of Model Execution
-    - Just like in my "Future Improvements" section, I believe that I skimmed over some items involving my training and testing, and could improve my model and understanding of the dataset. I believe I somewhat got lucky with this classifier working so well with having to do little testing with parameters and types of models. 
+    - Just like in my "Future Improvements" section, I believe that I skimmed over some items involving data cleaning, training, and testing, and could improve my understanding of the model.
