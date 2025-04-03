@@ -195,24 +195,24 @@ ORDER BY defaulted;
 
 -- Split the data into training and test sets
 CREATE OR REPLACE TABLE `loan_club_dataset.train_data` AS
-WITH stratified_data AS (
+WITH unsplit_data AS (
   SELECT *, RAND() AS random_value
   FROM `loan_club_dataset.accepted_loans_final_cleaned`
 )
 
 SELECT *
-FROM stratified_data
+FROM unsplit_data
 WHERE random_value <= 0.8;  -- 80% for training
 
 
 CREATE OR REPLACE TABLE `loan_club_dataset.test_data` AS
-WITH stratified_data AS (
+WITH unsplit_data AS (
   SELECT *, RAND() AS random_value
   FROM `loan_club_dataset.accepted_loans_final_cleaned`
 )
 
 SELECT *
-FROM stratified_data
+FROM unsplit_data
 WHERE random_value > 0.8;  -- 20% for testing
 
 

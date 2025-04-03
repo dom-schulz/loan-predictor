@@ -58,23 +58,26 @@ Key features used in the model include items like:
 
    ```sql
    -- Split the data into training and test sets
-   CREATE OR REPLACE TABLE `loan_club_dataset.train_data` AS
-   WITH stratified_data AS (
-     SELECT *, RAND() AS random_value
-     FROM `loan_club_dataset.accepted_loans_final_cleaned`
-   )
-   SELECT *
-   FROM stratified_data
-   WHERE random_value <= 0.8;  -- 80% for training
+    CREATE OR REPLACE TABLE `loan_club_dataset.train_data` AS
+    WITH unsplit_data AS (
+    SELECT *, RAND() AS random_value
+    FROM `loan_club_dataset.accepted_loans_final_cleaned`
+    )
 
-   CREATE OR REPLACE TABLE `loan_club_dataset.test_data` AS
-   WITH stratified_data AS (
-     SELECT *, RAND() AS random_value
-     FROM `loan_club_dataset.accepted_loans_final_cleaned`
-   )
-   SELECT *
-   FROM stratified_data
-   WHERE random_value > 0.8;  -- 20% for testing
+    SELECT *
+    FROM unsplit_data
+    WHERE random_value <= 0.8;  -- 80% for training
+
+
+    CREATE OR REPLACE TABLE `loan_club_dataset.test_data` AS
+    WITH unsplit_data AS (
+    SELECT *, RAND() AS random_value
+    FROM `loan_club_dataset.accepted_loans_final_cleaned`
+    )
+
+    SELECT *
+    FROM unsplit_data
+    WHERE random_value > 0.8;  -- 20% for testing
    ```
 
 2. **Model Training**: The model is trained using the training dataset with the following SQL query. A boosted tree classifier is used, and various parameters are set to optimize performance:
@@ -128,6 +131,27 @@ These metrics indicate:
 - **F1 Score (0.9631)**: The harmonic mean of precision and recall shows overall performance
 - **Log Loss (0.0297)**: Indicates confidence in predictions
 - **ROC AUC (0.9978)**: Demonstrates discrimination between defaulting and non-defaulting loans
+
+#### Class Distribution Analysis
+To validate that the model's high performance is not simply due to class imbalance, we analyzed the distribution of defaulted loans in the dataset:
+
+```sql
+SELECT 
+  defaulted, 
+  COUNT(*) AS count,
+  ROUND(COUNT(*) * 100 / SUM(COUNT(*)) OVER(), 2) AS percentage
+FROM `loan_club_dataset.accepted_loans_final_cleaned`
+GROUP BY defaulted
+ORDER BY defaulted;
+```
+
+Results:
+| Defaulted | Count | Percentage |
+|-----------|--------|------------|
+| 0 (No) | 1,990,487 | 88.12% |
+| 1 (Yes) | 268,379 | 11.88% |
+
+This distribution shows that while the dataset is imbalanced (88.12% non-defaulted vs 11.88% defaulted loans), the model's accuracy of 99.15% significantly outperforms simply predicting the majority class. Furthermore, the high recall (0.9311) on the minority class (defaulted loans) demonstrates that the model effectively identifies 93% of actual defaults despite their relative rarity in the dataset.
 
 
 # Interactive Interface
