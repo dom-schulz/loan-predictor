@@ -235,9 +235,7 @@ SELECT * FROM `loan_club_dataset.train_data`;
 -------------------------- Model Testing and Evaluation ------------------------------
 
 -- Test the model on the test set
-SELECT
-  predicted_defaulted,
-  predicted_defaulted_probs
+SELECT predicted_defaulted, predicted_defaulted_probs
 FROM
   ML.PREDICT(MODEL `loan_club_dataset.boosted_tree_model`,
              (SELECT * FROM `loan_club_dataset.test_data`));

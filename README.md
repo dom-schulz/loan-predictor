@@ -5,10 +5,9 @@ This project implements a machine learning model to predict loan defaults using 
 ## Project Overview
 
 The project consists of several integrated components:
-1. Data preprocessing and cleaning using BigQuery SQL, where the machine learning model (Gradient Boosting) is also trained and evaluated
-2. Comprehensive data pipeline handling millions of loan records through Google Cloud Platform
-3. Interactive Streamlit web interface that allows users to input loan information and receive default predictions
-4. Automated random value generation system for testing and demonstration purposes
+1. Data preprocessing and cleaning using SQL in BigQuery, where the machine learning model is also trained and evaluated
+2. Interactive Streamlit web interface that allows users to input loan information and receive default predictions (with 99.15% accuracy)
+3. Automated random value generation system for testing and demonstration purposes
 
 ## Project Structure
 
@@ -16,12 +15,11 @@ The project consists of several integrated components:
 - `find_ranges_for_rand.py`: Generates realistic ranges for random value generation in the interface
 - `user_interface.py`: Streamlit interface implementation for user interaction
 - `requirements.txt`: Project dependencies and version specifications
-- `streamlit_service_key.json`: Google Cloud credentials for BigQuery access
-- `secrets.toml`: Configuration file for secure credential management
+- **Secrets Management**: Streamlit's built-in feature is used to handle BigQuery login credentials securely, eliminating the need for external files like `secrets.toml` or `streamlit_service_key.json`. This ensures that sensitive information is managed safely within the Streamlit app environment.
 
-# Dataset
+## Dataset
 
-The project uses the Lending Club dataset from Kaggle, which contains millions of loan records. The dataset includes various features such as:
+The project uses the [Lending Club dataset from Kaggle](https://www.kaggle.com/datasets/wordsforthewise/lending-club), which contains millions of loan records. The dataset includes various features such as:
 - Loan amount and funding details
 - Interest rates and installment information
 - Borrower characteristics (income, FICO scores, etc.)
@@ -51,7 +49,7 @@ Key features used in the model include items like:
 
 ### Model Selection
 - Algorithm: Gradient Boosted Decision Tree
-    - This algorithm worked well as the classifier needed to be very complex to handle the MANY intricacies within an effective tree for this dataset. 
+    Why this algorithm?: A classifier for this dataset needed to be very complex to handle the MANY intricacies within an effective classifier for this application. 
 - Type: Binary Classification (Default vs. Non-default)
 
 ### Training Process
@@ -98,12 +96,11 @@ Key features used in the model include items like:
 
    ```sql
    -- Test the model on the test set
-   SELECT
-     predicted_defaulted,
-     predicted_defaulted_probs
-   FROM
-     ML.PREDICT(MODEL `loan_club_dataset.boosted_tree_model`,
-                (SELECT * FROM `loan_club_dataset.test_data`));
+    SELECT predicted_defaulted, predicted_defaulted_probs
+    FROM
+        ML.PREDICT(MODEL `loan_club_dataset.boosted_tree_model`,
+             (SELECT * FROM `loan_club_dataset.test_data`));
+
 
    -- Evaluate the model
    SELECT *
@@ -141,9 +138,9 @@ The project includes a Streamlit-based user interface that allows users to:
 - Test the model with random values within realistic ranges
 
 
-## Usage
+## Usage/Proof of Concept
 
-1. Run the Streamlit interface:  
+1. Run the Streamlit interface to generate default predictions:  
    - [Click here to launch the app](https://loan-predictor-dom-schulz.streamlit.app/)
 2. Input loan information through the interface or hit "Generate New Random Values" at the bottom.  
    - Note: the fields are randomly generated when the app is loaded.  
@@ -152,9 +149,8 @@ The project includes a Streamlit-based user interface that allows users to:
 
 # Future Improvements
 
-1. Add visualizations of model performance and metrics 
-2. Look into more specific feature importance analysis
-3. Include more analysis regarding the dataset and features that impact defaults. I believe my overall explanation of predictions could be much more in depth. 
+1. Look into more specific feature importance and better select features for training. It is lucky how well this model is performing given the quick, simple cleaning process.
+2. Look into performance of other models and weighting them in an ensemble.
 
 
 # Challenges
