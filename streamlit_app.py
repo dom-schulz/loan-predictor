@@ -13,6 +13,7 @@ st.set_page_config(
 )
 
 # Function to generate random values within pre-defined ranges in the "find_ranges_for_rand.py" file
+# These values are manually coded, so the application does not have to query for the ranges every time
 def get_random_defaults():
     ranges = {
         'loan_amnt': (800.0, 40000.0),
@@ -33,10 +34,10 @@ def get_random_defaults():
         'revol_util': (0.0, 137.2),
         'total_acc': (1.0, 122.0),
         'total_pymnt': (0.0, 40981.43),
-        'total_rec_prncp': (0.0, 40000.0),  # Using loan amount max as a reasonable limit
-        'total_rec_int': (0.0, 40000.0),    # Using loan amount max as a reasonable limit
-        'recoveries': (0.0, 40000.0),       # Using loan amount max as a reasonable limit
-        'collection_recovery_fee': (0.0, 1000.0),  # Using a reasonable limit
+        'total_rec_prncp': (0.0, 40000.0),  # predetermined loan max
+        'total_rec_int': (0.0, 40000.0),    # predetermined loan max
+        'recoveries': (0.0, 40000.0),       # predetermined loan max
+        'collection_recovery_fee': (0.0, 1000.0),  # predetermined max
         'last_pymnt_amnt': (0.0, 40981.43)
     }
     
@@ -50,7 +51,7 @@ def get_random_defaults():
         'verification_status': ['Not Verified', 'Source Verified', 'Verified']
     }
     
-    # Generate random values
+    # Actually generate random values
     random_values = {}
     for field, (min_val, max_val) in ranges.items():
         if field in ['delinq_2yrs', 'inq_last_6mths', 'open_acc', 'pub_rec', 'total_acc']:
@@ -148,7 +149,7 @@ st.title("Loan Default Prediction")
 if 'defaults' not in st.session_state:
     st.session_state.defaults = get_random_defaults()
 
-st.write("Enter the details below to predict whether the loan will default.")
+st.write("Enter the details below to predict loan default probability.")
 
 # Input fields for the user to fill out with random default values
 loan_amnt = st.number_input("Loan Amount", min_value=800.0, max_value=40000.0, value=float(st.session_state.defaults['loan_amnt']))
