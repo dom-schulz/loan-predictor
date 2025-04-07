@@ -11,10 +11,10 @@ The project consists of several integrated components:
 
 ## Project Structure
 
-- `bigquery_queries.sql`: Contains SQL queries for data preprocessing and ML model training in BigQuery
-- `find_ranges_for_rand.py`: Generates realistic ranges for random value generation in the interface
-- `user_interface.py`: Streamlit interface implementation for user interaction
-- `requirements.txt`: Project dependencies and version specifications
+- [`bigquery_queries.sql`](https://github.com/dom-schulz/loan-predictor/blob/main/bigquery_queries.sql): Contains SQL queries for data preprocessing and ML model training in BigQuery
+- [`find_ranges_for_rand.py`](https://github.com/dom-schulz/loan-predictor/blob/main/find_ranges_for_rand.py): Generates realistic ranges for random value generation in the interface
+- [`user_interface.py`](https://github.com/dom-schulz/loan-predictor/blob/main/user_interface.py): Streamlit interface implementation for user interaction
+- [`requirements.txt`](https://github.com/dom-schulz/loan-predictor/blob/main/requirements.txt): Project dependencies and version specifications
 - **Secrets Management**: Streamlit's built-in feature is used to handle BigQuery login credentials securely, eliminating the need for external files like `secrets.toml` or `streamlit_service_key.json`. This ensures that sensitive information is managed safely within the Streamlit app environment.
 
 ## Dataset
