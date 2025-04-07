@@ -6,7 +6,7 @@ Lending Club is one of the world's largest online lending marketplaces, connecti
 
 ## Project Overview
 
-The project consists of several integrated components:
+The project consists of the following integrated components:
 1. Data preprocessing and cleaning using SQL in BigQuery, where the machine learning model is also trained and evaluated
 2. Interactive Streamlit web interface that allows users to input loan information and receive default predictions (with 99.15% accuracy)
 3. Automated random value generation system for testing and demonstration purposes
