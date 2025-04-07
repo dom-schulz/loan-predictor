@@ -70,6 +70,7 @@ Key features used in the model include items like:
 
 ### Model Selection
 - Algorithm: Gradient Boosted Decision Tree
+
     **Why this algorithm?:** A classifier for this dataset needed to be very complex to handle the MANY intricacies within an effective classifier for this application. 
 - Type: Binary Classification (Default vs. Non-default)
 
